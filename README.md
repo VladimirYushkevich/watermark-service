@@ -33,3 +33,7 @@ c) Provide Unit-Tests to ensure the functionality of the service.
 ```
 ./gradlew clean build -i && java -jar build/libs/watermark-0.0.1-SNAPSHOT.jar
 ```
+
+### Usage:
+[In memory DB console](http://localhost:8080/h2-console)
+

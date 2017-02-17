@@ -14,8 +14,7 @@ import java.util.UUID;
 import static java.util.Objects.isNull;
 
 /**
- * For a book the watermark includes the properties
- * content, title, author and topic. The journal watermark includes the content, title and author.
+ * Entity class for Watermark.
  */
 
 @Entity
@@ -32,7 +31,7 @@ public class Watermark implements Serializable {
     @Column(columnDefinition = "BINARY(16)")
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    private UUID id; // to make it different from publication PK and will be used on controller level
+    private UUID id; // to make it different from publication PK and will be used on service/controller level
 
     @CreatedDate
     @Column(updatable = false)
@@ -47,41 +46,14 @@ public class Watermark implements Serializable {
     @OneToOne(mappedBy = "watermark")
     private Publication publication;
 
-    private String status;
-
-    public Status getStatus() {
-        return Status.findByName(this.status);
-    }
-
-    @AllArgsConstructor
-    public enum Status {
-
-        PENDING("PENDING"), FINISHED("FINISHED"), FAILED("FAILED");
-
-        @Getter
-        private String name;
-
-        public static Status findByName(String name) {
-            if (null == name) {
-                return null;
-            }
-
-            for (Status status : values()) {
-                if (status.getName().equals(name)) {
-                    return status;
-                }
-            }
-
-            return null;
-        }
-    }
+    private String property;
 
     @Override
     public String toString() {
         return "Watermark[" +
                 "id=" + id +
                 ", publication=" + (isNull(publication) ? null : publication.getId()) +
-                ", status=" + status +
+                ", property=" + property +
                 ']';
     }
 }

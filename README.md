@@ -37,3 +37,8 @@ c) Provide Unit-Tests to ensure the functionality of the service.
 ### Usage:
 [In memory DB console](http://localhost:8080/h2-console)
 
+#### API calls:
+```
+curl localhost:8080/publication/1?content=BOOK | jq
+```
+

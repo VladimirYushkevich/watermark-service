@@ -12,16 +12,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.UUID;
 
-import static com.company.watermark.domain.Watermark.Status.FINISHED;
-import static com.company.watermark.domain.Watermark.Status.PENDING;
-import static com.company.watermark.repository.RepositoryDataFactory.createBook;
-import static com.company.watermark.repository.RepositoryDataFactory.createJournal;
+import static com.company.watermark.RepositoryDataFactory.createBook;
+import static com.company.watermark.RepositoryDataFactory.createJournal;
+import static com.company.watermark.utils.WatermarkGenerator.generateWatermark;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class WatermarkRepositoryIntegrationTest {
+public class WatermarkRepositoryIT {
 
     @Autowired
     private WatermarkRepository watermarkRepository;
@@ -34,64 +33,68 @@ public class WatermarkRepositoryIntegrationTest {
 
     @Test
     public void testWatermarkForBookCrudOperations() throws Exception {
-        final Book book = createBook();
-        entityManager.persist(book);
-
-        assertThat(bookRepository.findOne(book.getId()), is(book));
-        assertNull(bookRepository.findOne(book.getId()).getWatermark());
-
         //create watermark
-        final Watermark watermark = Watermark.builder()
-                .publication(book)
-                .status(PENDING.getName())
-                .build();
-        book.setWatermark(watermark);
-        entityManager.persist(watermark);
-        assertThat(bookRepository.findOne(book.getId()).getWatermark().getStatus(), is(PENDING));
+        //given
+        final Book book = createBook();
+        //when
+        entityManager.persist(book);
+        //then
+        assertThat(bookRepository.findOne(book.getId()), is(book));
+        assertNull(bookRepository.findOne(book.getId()).getWatermark().getProperty());
 
+        final Watermark watermark = book.getWatermark();
         final UUID watermarkId = watermark.getId();
         assertThat(watermarkRepository.findById(watermarkId), is(watermark));
         assertThat(watermarkRepository.findById(watermarkId).getPublication(), is(book));
 
         //update watermark
-        watermark.setStatus(FINISHED.getName());
-        assertThat(bookRepository.findOne(book.getId()).getWatermark().getStatus(), is(FINISHED));
+        //given
+        watermark.setProperty(generateWatermark(watermark.getPublication()));
+        //when
+        entityManager.persist(book);
+        //then
+        assertThat(bookRepository.findOne(book.getId()).getWatermark().getProperty(),
+                is("---*book*authorBook*titleBook*Science*---"));
 
         //delete watermark
+        //when
         book.getWatermark().setPublication(null);
         book.setWatermark(null);
+        //then
         assertNull(bookRepository.findOne(book.getId()).getWatermark());
         assertTrue(watermarkRepository.findAll().isEmpty());
     }
 
     @Test
     public void testWatermarkForJournalCrudOperations() throws Exception {
-        final Journal journal = createJournal();
-        entityManager.persist(journal);
-
-        assertThat(journalRepository.findOne(journal.getId()), is(journal));
-        assertNull(journalRepository.findOne(journal.getId()).getWatermark());
-
         //create watermark
-        final Watermark watermark = Watermark.builder()
-                .publication(journal)
-                .status(PENDING.getName())
-                .build();
-        journal.setWatermark(watermark);
-        entityManager.persist(watermark);
-        assertThat(journalRepository.findOne(journal.getId()).getWatermark().getStatus(), is(PENDING));
+        //given
+        final Journal journal = createJournal();
+        //when
+        entityManager.persist(journal);
+        //then
+        assertThat(journalRepository.findOne(journal.getId()), is(journal));
+        assertNull(journalRepository.findOne(journal.getId()).getWatermark().getProperty());
 
-        final UUID watermarkId = watermark.getId();
-        assertThat(watermarkRepository.findById(watermarkId), is(watermark));
+        final Watermark watermark = journal.getWatermark();
+        final UUID watermarkId = journal.getWatermark().getId();
+        assertThat(watermarkRepository.findById(watermarkId), is(journal.getWatermark()));
         assertThat(watermarkRepository.findById(watermarkId).getPublication(), is(journal));
 
         //update watermark
-        watermark.setStatus(FINISHED.getName());
-        assertThat(journalRepository.findOne(journal.getId()).getWatermark().getStatus(), is(FINISHED));
+        //given
+        journal.getWatermark().setProperty(generateWatermark(watermark.getPublication()));
+        //when
+        entityManager.persist(journal);
+        //then
+        assertThat(journalRepository.findOne(journal.getId()).getWatermark().getProperty(),
+                is("---*journal*authorJournal*titleJournal*---"));
 
         //delete watermark
-        journal.getWatermark().setPublication(null);
+        //when
+        watermark.setPublication(null);
         journal.setWatermark(null);
+        //then
         assertNull(journalRepository.findOne(journal.getId()).getWatermark());
         assertTrue(watermarkRepository.findAll().isEmpty());
     }

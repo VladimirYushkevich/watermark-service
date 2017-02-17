@@ -14,9 +14,8 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
-import static com.company.watermark.domain.Book.Topic.*;
-import static com.company.watermark.domain.Watermark.Status.FINISHED;
-import static com.company.watermark.domain.Watermark.Status.PENDING;
+import static com.company.watermark.domain.enums.Topic.*;
+import static com.company.watermark.utils.WatermarkGenerator.generateWatermark;
 
 /**
  * Loads data on start up. It avoid us writing SQL statements.
@@ -41,7 +40,6 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 .build();
         book1.setWatermark(Watermark.builder()
                 .publication(book1)
-                .status(PENDING.getName())
                 .build());
 
         bookRepository.save(book1);
@@ -55,7 +53,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 .build();
         book2.setWatermark(Watermark.builder()
                 .publication(book2)
-                .status(FINISHED.getName())
+                .property(generateWatermark(book2))
                 .build());
 
         bookRepository.save(book2);
@@ -69,7 +67,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 .build();
         book3.setWatermark(Watermark.builder()
                 .publication(book3)
-                .status(FINISHED.getName())
+                .property(generateWatermark(book3))
                 .build());
 
         bookRepository.save(book3);
@@ -82,7 +80,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 .build();
         journal1.setWatermark(Watermark.builder()
                 .publication(journal1)
-                .status(FINISHED.getName())
+                .property(generateWatermark(journal1))
                 .build());
 
         journalRepository.save(journal1);

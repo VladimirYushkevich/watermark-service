@@ -1,5 +1,7 @@
 package com.company.watermark.domain;
 
+import com.company.watermark.domain.enums.Content;
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +13,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import static java.util.Objects.isNull;
 
 /**
- * Base class to support inheritance.
+ * Base entity class to support inheritance (A single table per class hierarchy) for publications.
+ *
+ * @see Book
+ * @see Journal
  */
 
 @Entity
@@ -23,18 +29,18 @@ import static java.util.Objects.isNull;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "content", discriminatorType = DiscriminatorType.STRING)
 @EntityListeners(AuditingEntityListener.class)
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public abstract class Publication implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "content", insertable = false, updatable = false)
-    private String discriminator;
+    @Column(nullable = false, insertable = false, updatable = false)
+    private String content;
 
     private String title;
 
@@ -55,17 +61,25 @@ public abstract class Publication implements Serializable {
     private Watermark watermark;
 
     public Content getContent() {
-        return Content.findByName(this.discriminator);
+        return Content.findByName(this.content);
+    }
+
+    public void setContent(Content content) {
+        this.content = content.getName();
+    }
+
+    public List<String> getWatermarkProperties() {
+        return Lists.newArrayList(content, author, title);
     }
 
     @Override
     public String toString() {
         return "Publication[" +
                 "id=" + id +
-                ", discriminator='" + discriminator + '\'' +
+//                ", discriminator='" + discriminator + '\'' +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
-                ", watermark=" + (isNull(watermark) ? null : String.format("[%s/%s]", watermark.getId(), watermark.getStatus())) +
+                ", watermark=" + (isNull(watermark) ? null : String.format("[%s/%s]", watermark.getId(), watermark.getProperty())) +
                 ']';
     }
 }

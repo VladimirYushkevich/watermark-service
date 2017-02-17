@@ -34,6 +34,8 @@ dependencies {
 
     compile('javax.inject:javax.inject:1')
     compile('org.projectlombok:lombok:1.16.12')
+    compile('com.google.guava:guava:r05')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('com.jayway.restassured:rest-assured:2.9.0')
 }

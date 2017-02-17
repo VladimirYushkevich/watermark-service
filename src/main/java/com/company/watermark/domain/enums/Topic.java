@@ -1,4 +1,4 @@
-package com.company.watermark.domain;
+package com.company.watermark.domain.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

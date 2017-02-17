@@ -1,12 +1,24 @@
 package com.company.watermark.domain;
 
+import com.company.watermark.domain.enums.Topic;
+import com.google.common.collect.Lists;
 import lombok.*;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import java.util.List;
 
-import static com.company.watermark.domain.Content.BOOK;
+import static com.company.watermark.domain.enums.Content.BOOK;
+import static com.company.watermark.domain.enums.Content.Values.BOOK_VALUE;
+
+/**
+ * Entity class for Book.
+ *
+ * @see Publication
+ */
 
 @Entity
+@DiscriminatorValue(value = BOOK_VALUE)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,33 +35,14 @@ public class Book extends Publication {
         this.topic = topic.getName();
     }
 
-    public Topic getTopic() {
-        return Topic.findByName(this.topic);
+    @Override
+    public List<String> getWatermarkProperties() {
+        final List<String> superProperties = Lists.newArrayList(super.getWatermarkProperties());
+        superProperties.add(topic);
+        return superProperties;
     }
 
-    /**
-     * Book publications include topics in business, science and media.
-     */
-    @AllArgsConstructor
-    public enum Topic {
-
-        BUSINESS("Business"), SCIENCE("Science"), MEDIA("Media");
-
-        @Getter
-        private String name;
-
-        public static Topic findByName(String name) {
-            if (null == name) {
-                return null;
-            }
-
-            for (Topic topic : values()) {
-                if (topic.getName().equals(name)) {
-                    return topic;
-                }
-            }
-
-            return null;
-        }
+    public Topic getTopic() {
+        return Topic.findByName(this.topic);
     }
 }

@@ -2,11 +2,20 @@ package com.company.watermark.domain;
 
 import lombok.*;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import static com.company.watermark.domain.Content.JOURNAL;
+import static com.company.watermark.domain.enums.Content.JOURNAL;
+import static com.company.watermark.domain.enums.Content.Values.JOURNAL_VALUE;
+
+/**
+ * Entity class for Journal.
+ *
+ * @see Publication
+ */
 
 @Entity
+@DiscriminatorValue(JOURNAL_VALUE)
 @Getter
 @Setter
 @NoArgsConstructor

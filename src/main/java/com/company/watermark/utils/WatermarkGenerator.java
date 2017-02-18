@@ -1,8 +1,8 @@
 package com.company.watermark.utils;
 
-import com.company.watermark.domain.Publication;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
@@ -11,10 +11,10 @@ import java.util.List;
  */
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Slf4j
 public final class WatermarkGenerator {
 
-    public static String generateWatermark(Publication publication) {
-        final List<String> watermarkProperties = publication.getWatermarkProperties();
+    public static String generateWatermark(List<String> watermarkProperties) {
 
         StringBuilder watermark = new StringBuilder();
         watermark.append("---*");

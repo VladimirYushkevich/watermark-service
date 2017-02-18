@@ -1,10 +1,10 @@
-package com.company.watermark.domain.enums;
+package com.company.watermark.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static com.company.watermark.domain.enums.Content.Values.BOOK_VALUE;
-import static com.company.watermark.domain.enums.Content.Values.JOURNAL_VALUE;
+import static com.company.watermark.domain.Content.Values.BOOK_VALUE;
+import static com.company.watermark.domain.Content.Values.JOURNAL_VALUE;
 
 @AllArgsConstructor
 public enum Content {
@@ -28,7 +28,10 @@ public enum Content {
         return null;
     }
 
-    //required in order to use enum as discriminator
+    /**
+     * Workaround to use enum as discriminator.
+     */
+
     public static class Values {
         public static final String BOOK_VALUE = "book";
         public static final String JOURNAL_VALUE = "journal";

@@ -1,6 +1,5 @@
 package com.company.watermark.domain;
 
-import com.company.watermark.domain.enums.Content;
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -76,10 +75,11 @@ public abstract class Publication implements Serializable {
     public String toString() {
         return "Publication[" +
                 "id=" + id +
-//                ", discriminator='" + discriminator + '\'' +
+                ", content='" + content + '\'' +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
-                ", watermark=" + (isNull(watermark) ? null : String.format("[%s/%s]", watermark.getId(), watermark.getProperty())) +
+                ", watermark=" + (isNull(watermark) ? null :
+                String.format("[%s/%s/%s]", watermark.getId(), watermark.getProperty(), watermark.getStatus())) +
                 ']';
     }
 }

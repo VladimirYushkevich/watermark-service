@@ -49,7 +49,7 @@ public class WatermarkRepositoryIT {
 
         //update watermark
         //given
-        watermark.setProperty(generateWatermark(watermark.getPublication()));
+        watermark.setProperty(generateWatermark(watermark.getPublication().getWatermarkProperties()));
         //when
         entityManager.persist(book);
         //then
@@ -83,7 +83,7 @@ public class WatermarkRepositoryIT {
 
         //update watermark
         //given
-        journal.getWatermark().setProperty(generateWatermark(watermark.getPublication()));
+        journal.getWatermark().setProperty(generateWatermark(watermark.getPublication().getWatermarkProperties()));
         //when
         entityManager.persist(journal);
         //then

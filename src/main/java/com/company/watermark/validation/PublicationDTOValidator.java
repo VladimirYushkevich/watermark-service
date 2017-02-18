@@ -6,7 +6,7 @@ import org.springframework.validation.Errors;
 
 import java.util.Set;
 
-import static com.company.watermark.domain.enums.Content.BOOK;
+import static com.company.watermark.domain.Content.BOOK;
 import static java.util.Objects.isNull;
 
 @Component

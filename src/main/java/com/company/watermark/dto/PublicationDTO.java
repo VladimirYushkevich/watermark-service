@@ -1,7 +1,8 @@
 package com.company.watermark.dto;
 
-import com.company.watermark.domain.enums.Content;
-import com.company.watermark.domain.enums.Topic;
+import com.company.watermark.domain.Book;
+import com.company.watermark.domain.Content;
+import com.company.watermark.domain.Journal;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,9 @@ import javax.validation.constraints.NotNull;
 
 /**
  * Class for publication presentation. Base class for (book, journal) and watermark properties.
+ *
+ * @see Book
+ * @see Journal
  */
 
 @Data
@@ -27,6 +31,6 @@ public class PublicationDTO {
     private String title;
     @NotNull
     private String author;
-    private Topic topic;
+    private Book.Topic topic;
 
 }

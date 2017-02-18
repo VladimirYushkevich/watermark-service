@@ -1,9 +1,10 @@
 package com.company.watermark.controller;
 
+import com.company.watermark.domain.Content;
 import com.company.watermark.domain.Publication;
-import com.company.watermark.domain.enums.Content;
 import com.company.watermark.dto.PageDTO;
 import com.company.watermark.dto.PublicationDTO;
+import com.company.watermark.dto.PublicationRequestDTO;
 import com.company.watermark.service.PublicationService;
 import com.company.watermark.validation.PublicationDTOValidator;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class PublicationController {
     private final PublicationService publicationService;
     private final PublicationDTOValidator validator;
 
-    @InitBinder
+    @InitBinder("publicationDTO")
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(validator);
     }
@@ -64,11 +65,11 @@ public class PublicationController {
         return buildPublicationDTO(publication);
     }
 
-    @RequestMapping(value = "/{publication_id}", method = RequestMethod.DELETE)
+    @RequestMapping(method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePublication(@PathVariable("publication_id") Long id, @RequestParam Content content) {
-        log.debug("::deletePublication {} with {} content", id, content);
+    public void deletePublication(@Validated @RequestBody PublicationRequestDTO request) {
+        log.debug("::deletePublication {}", request);
 
-        publicationService.delete(id, content);
+        publicationService.delete(request.getPublicationId(), request.getContent());
     }
 }

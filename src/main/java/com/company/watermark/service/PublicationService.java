@@ -1,7 +1,8 @@
 package com.company.watermark.service;
 
+import com.company.watermark.domain.Content;
 import com.company.watermark.domain.Publication;
-import com.company.watermark.domain.enums.Content;
+import com.company.watermark.domain.Watermark;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,4 +19,6 @@ public interface PublicationService {
     Publication find(Long publicationId, Content content);
 
     Page<Publication> findAllByPage(Pageable pageable, Content content);
+
+    Watermark setWatermark(Long publicationId, Content content);
 }

@@ -1,10 +1,9 @@
 package com.company.watermark.utils;
 
 import com.company.watermark.domain.Book;
+import com.company.watermark.domain.Content;
 import com.company.watermark.domain.Journal;
 import com.company.watermark.domain.Publication;
-import com.company.watermark.domain.enums.Content;
-import com.company.watermark.domain.enums.Topic;
 import com.company.watermark.dto.PageDTO;
 import com.company.watermark.dto.PublicationDTO;
 import lombok.AccessLevel;
@@ -13,7 +12,7 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-import static com.company.watermark.domain.enums.Content.BOOK;
+import static com.company.watermark.domain.Content.BOOK;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.beans.BeanUtils.copyProperties;
 
@@ -31,7 +30,7 @@ public final class PublicationMapper {
         switch (content) {
             case BOOK:
                 publication = new Book();
-                final Topic topic = dto.getTopic();
+                final Book.Topic topic = dto.getTopic();
                 copyProperties(dto, publication);
                 ((Book) publication).setTopic(topic.getName());
                 break;

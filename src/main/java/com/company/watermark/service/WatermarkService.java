@@ -1,12 +1,14 @@
 package com.company.watermark.service;
 
-import com.company.watermark.domain.enums.Content;
-import com.company.watermark.dto.TicketDTO;
+import com.company.watermark.domain.Content;
+import com.company.watermark.domain.Publication;
+import com.company.watermark.exception.WatermarkException;
+import rx.Observable;
 
 import java.util.UUID;
 
 /**
- * Watermark service for creation/monitoring of watermarks and also for transforming data for presentation layer.
+ * Watermark service for creation/monitoring of watermarks.
  */
 
 public interface WatermarkService {
@@ -14,12 +16,15 @@ public interface WatermarkService {
     /**
      * For a given content document (publication) the service should
      * return a ticket, which can be used to poll the status of processing.
+     * Assuming that document watermarking is a time consuming process.
+     * Not allowed to watermark document if it already in pending status.
      *
-     * @param publicationId Id of PublicationDTO (Document Id)
+     * @param publicationId Id of Publication (Document Id)
      * @param content       Content of document
-     * @return UUID of Ticket
+     * @return Observable UUID of Ticket/Watermark
+     * @see Publication
      */
-    UUID watermarkDocument(Long publicationId, Content content);
+    Observable<UUID> watermarkDocument(Long publicationId, Content content) throws WatermarkException;
 
     /**
      * Polls status of watermark. If the watermarking is finished the
@@ -28,5 +33,5 @@ public interface WatermarkService {
      * @param ticketId Id of ticket/watermark
      * @return Ticket with optional document
      */
-    TicketDTO pollWatermarkStatus(UUID ticketId);
+    Publication pollWatermarkStatus(UUID ticketId);
 }

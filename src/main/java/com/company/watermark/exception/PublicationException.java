@@ -1,6 +1,6 @@
 package com.company.watermark.exception;
 
-import com.company.watermark.domain.enums.Content;
+import com.company.watermark.domain.Content;
 
 import java.io.Serializable;
 

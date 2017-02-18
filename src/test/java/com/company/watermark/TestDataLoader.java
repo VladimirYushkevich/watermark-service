@@ -16,7 +16,8 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 
 import static com.company.watermark.RepositoryDataFactory.createJournal;
-import static com.company.watermark.domain.enums.Topic.*;
+import static com.company.watermark.domain.Book.Topic.*;
+import static com.company.watermark.domain.Watermark.Status.NEW;
 
 /**
  * Loads test data on start up. It avoid us writing SQL statements.
@@ -42,6 +43,7 @@ public class TestDataLoader implements ApplicationListener<ContextRefreshedEvent
                 .build();
         book1.setWatermark(Watermark.builder()
                 .publication(book1)
+                .status(NEW.getName())
                 .build());
 
         bookRepository.save(book1);
@@ -72,6 +74,7 @@ public class TestDataLoader implements ApplicationListener<ContextRefreshedEvent
                 .build());
         journal1.setWatermark(Watermark.builder()
                 .publication(book1)
+                .status(NEW.getName())
                 .build());
 
         journalRepository.save(journal1);

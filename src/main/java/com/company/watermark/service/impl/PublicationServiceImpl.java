@@ -1,9 +1,11 @@
 package com.company.watermark.service.impl;
 
+import com.company.watermark.domain.Content;
 import com.company.watermark.domain.Publication;
-import com.company.watermark.domain.enums.Content;
+import com.company.watermark.domain.Watermark;
 import com.company.watermark.exception.NotFoundException;
 import com.company.watermark.exception.PublicationException;
+import com.company.watermark.exception.WatermarkException;
 import com.company.watermark.repository.BookRepository;
 import com.company.watermark.repository.JournalRepository;
 import com.company.watermark.repository.PublicationRepository;
@@ -18,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.util.Optional;
 
+import static com.company.watermark.domain.Watermark.Status.NEW;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
@@ -63,6 +67,26 @@ public class PublicationServiceImpl implements PublicationService {
         final Page page = resolveRepository(content).findAll(pageable);
         log.debug("page {} from {} has {} publications", page.getNumber(), page.getTotalElements(), page.getContent().size());
         return page;
+    }
+
+    @Override
+    public Watermark setWatermark(Long publicationId, Content content) {
+        final Publication publication = find(publicationId, content);
+
+        final Watermark watermark = publication.getWatermark();
+        if (nonNull(watermark)) {
+            throw new WatermarkException(String.format("Document with id=%s already has watermark with uuid=%s",
+                    publication.getId(), watermark.getId()));
+        }
+
+        publication.setWatermark(Watermark.builder()
+                .publication(publication)
+                .status(NEW.getName())
+                .build());
+
+        final Watermark createdWatermark = createOrUpdate(publication).getWatermark();
+        log.debug("publication with id={} related to watermark {}", publication.getId(), createdWatermark);
+        return createdWatermark;
     }
 
     private PublicationRepository resolveRepository(Content content) {

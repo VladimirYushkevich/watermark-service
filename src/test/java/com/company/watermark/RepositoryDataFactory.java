@@ -4,7 +4,8 @@ import com.company.watermark.domain.Book;
 import com.company.watermark.domain.Journal;
 import com.company.watermark.domain.Watermark;
 
-import static com.company.watermark.domain.enums.Topic.SCIENCE;
+import static com.company.watermark.domain.Book.Topic.SCIENCE;
+import static com.company.watermark.domain.Watermark.Status.NEW;
 
 /**
  * Simple factory to createOrUpdate data for testing.
@@ -20,6 +21,7 @@ public class RepositoryDataFactory {
 
         book.setWatermark(Watermark.builder()
                 .publication(book)
+                .status(NEW.getName())
                 .build());
 
         return book;
@@ -33,6 +35,7 @@ public class RepositoryDataFactory {
 
         journal.setWatermark(Watermark.builder()
                 .publication(journal)
+                .status(NEW.getName())
                 .build());
 
         return journal;

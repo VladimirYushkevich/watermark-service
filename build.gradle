@@ -27,15 +27,18 @@ repositories {
 
 
 dependencies {
+    //Spring Boot
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
-
+    //Async
+    compile('com.netflix.hystrix:hystrix-core:1.5.9')
+    //DB
     compile("com.h2database:h2")
-
+    //Utils
     compile('javax.inject:javax.inject:1')
     compile('org.projectlombok:lombok:1.16.12')
     compile('com.google.guava:guava:r05')
-
+    //Test
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('com.jayway.restassured:rest-assured:2.9.0')
 }

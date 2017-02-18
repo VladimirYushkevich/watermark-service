@@ -48,12 +48,42 @@ public class Watermark implements Serializable {
 
     private String property;
 
+    private String status;
+
+    public Status getStatus() {
+        return Status.findByName(this.status);
+    }
+
     @Override
     public String toString() {
         return "Watermark[" +
                 "id=" + id +
                 ", publication=" + (isNull(publication) ? null : publication.getId()) +
                 ", property=" + property +
+                ", status=" + status +
                 ']';
+    }
+
+    @AllArgsConstructor
+    public enum Status {
+
+        NEW("NEW"), PENDING("PENDING"), SUCCESS("SUCCESS"), FAILED("FAILED");
+
+        @Getter
+        private String name;
+
+        public static Status findByName(String name) {
+            if (null == name) {
+                return null;
+            }
+
+            for (Status status : values()) {
+                if (status.getName().equals(name)) {
+                    return status;
+                }
+            }
+
+            return null;
+        }
     }
 }

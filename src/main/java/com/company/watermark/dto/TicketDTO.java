@@ -10,6 +10,7 @@ import java.util.UUID;
  * (Ticket {@link #id} is a primary key in <b>Watermark</b>).
  * If the watermarking is finished the
  * document can be retrieved with the ticket.
+ *
  * @see DocumentDTO
  */
 

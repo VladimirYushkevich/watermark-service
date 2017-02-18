@@ -14,7 +14,9 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
-import static com.company.watermark.domain.enums.Topic.*;
+import static com.company.watermark.domain.Book.Topic.*;
+import static com.company.watermark.domain.Watermark.Status.NEW;
+import static com.company.watermark.domain.Watermark.Status.SUCCESS;
 import static com.company.watermark.utils.WatermarkGenerator.generateWatermark;
 
 /**
@@ -40,6 +42,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 .build();
         book1.setWatermark(Watermark.builder()
                 .publication(book1)
+                .status(NEW.getName())
                 .build());
 
         bookRepository.save(book1);
@@ -53,7 +56,8 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 .build();
         book2.setWatermark(Watermark.builder()
                 .publication(book2)
-                .property(generateWatermark(book2))
+                .property(generateWatermark(book2.getWatermarkProperties()))
+                .status(SUCCESS.getName())
                 .build());
 
         bookRepository.save(book2);
@@ -67,7 +71,8 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 .build();
         book3.setWatermark(Watermark.builder()
                 .publication(book3)
-                .property(generateWatermark(book3))
+                .property(generateWatermark(book3.getWatermarkProperties()))
+                .status(SUCCESS.getName())
                 .build());
 
         bookRepository.save(book3);
@@ -80,7 +85,8 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 .build();
         journal1.setWatermark(Watermark.builder()
                 .publication(journal1)
-                .property(generateWatermark(journal1))
+                .property(generateWatermark(journal1.getWatermarkProperties()))
+                .status(SUCCESS.getName())
                 .build());
 
         journalRepository.save(journal1);

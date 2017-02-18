@@ -1,13 +1,18 @@
 package com.company.watermark.service.impl;
 
+import com.company.watermark.domain.Book;
+import com.company.watermark.domain.Journal;
 import com.company.watermark.domain.Publication;
 import com.company.watermark.domain.Watermark;
 import com.company.watermark.exception.NotFoundException;
+import com.company.watermark.exception.WatermarkException;
+import com.company.watermark.hystrix.WatermarkClient;
 import com.company.watermark.service.PublicationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,8 +20,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import static com.company.watermark.RepositoryDataFactory.createBook;
 import static com.company.watermark.RepositoryDataFactory.createJournal;
-import static com.company.watermark.domain.enums.Content.BOOK;
-import static com.company.watermark.domain.enums.Content.JOURNAL;
+import static com.company.watermark.domain.Content.BOOK;
+import static com.company.watermark.domain.Content.JOURNAL;
 import static com.company.watermark.utils.WatermarkGenerator.generateWatermark;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -28,6 +33,8 @@ public class PublicationServiceIT {
 
     @Autowired
     private PublicationService publicationService;
+    @MockBean
+    private WatermarkClient watermarkClient;
 
     @Test
     public void testBookCrudOperations() throws Exception {
@@ -45,7 +52,7 @@ public class PublicationServiceIT {
 
         //update
         //given
-        watermark.setProperty(generateWatermark(watermark.getPublication()));
+        watermark.setProperty(generateWatermark(watermark.getPublication().getWatermarkProperties()));
         //when
         final String property = publicationService.find(id, BOOK).getWatermark().getProperty();
         //then
@@ -96,7 +103,7 @@ public class PublicationServiceIT {
 
         //update
         //given
-        watermark.setProperty(generateWatermark(watermark.getPublication()));
+        watermark.setProperty(generateWatermark(watermark.getPublication().getWatermarkProperties()));
         //when
         final String property = publicationService.find(id, JOURNAL).getWatermark().getProperty();
         //then
@@ -129,5 +136,45 @@ public class PublicationServiceIT {
         //then
         assertThat(journalPage2.getTotalElements(), is(3L));
         assertThat(journalPage2.getContent().size(), is(1));
+    }
+
+    @Test
+    public void testWatermarkSetUpForBook_success() throws Exception {
+        //given
+        final Book book = createBook();
+        book.setWatermark(null);
+        final Publication bookWithoutWatermark = publicationService.createOrUpdate(book);
+        //when
+        final Watermark watermark = publicationService.setWatermark(bookWithoutWatermark.getId(), BOOK);
+        //then
+        assertThat(publicationService.find(book.getId(), BOOK).getWatermark(), is(watermark));
+    }
+
+    @Test
+    public void testWatermarkSetUpForJournal_success() throws Exception {
+        //given
+        final Journal journal = createJournal();
+        journal.setWatermark(null);
+        final Publication journalWithoutWatermark = publicationService.createOrUpdate(journal);
+        //when
+        final Watermark watermark = publicationService.setWatermark(journalWithoutWatermark.getId(), JOURNAL);
+        //then
+        assertThat(publicationService.find(journal.getId(), JOURNAL).getWatermark(), is(watermark));
+    }
+
+    @Test(expected = WatermarkException.class)
+    public void testWatermarkSetUpForBook_fail() throws Exception {
+        //given
+        final Publication book = publicationService.createOrUpdate(createBook());
+        //when
+        publicationService.setWatermark(book.getId(), BOOK);
+    }
+
+    @Test(expected = WatermarkException.class)
+    public void testWatermarkSetUpForJournal_fail() throws Exception {
+        //given
+        final Publication journal = publicationService.createOrUpdate(createJournal());
+        //when
+        publicationService.setWatermark(journal.getId(), JOURNAL);
     }
 }

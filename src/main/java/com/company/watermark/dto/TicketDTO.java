@@ -1,6 +1,11 @@
 package com.company.watermark.dto;
 
+import com.company.watermark.domain.Watermark;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
@@ -11,11 +16,16 @@ import java.util.UUID;
  * If the watermarking is finished the
  * document can be retrieved with the ticket.
  *
- * @see DocumentDTO
+ * @see PublicationDTO
  */
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TicketDTO {
     private UUID id;
-    private DocumentDTO document;
+    private Watermark.Status status;
+    private PublicationDTO document;
 }

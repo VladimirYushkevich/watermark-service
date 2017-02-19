@@ -3,6 +3,8 @@ package com.company.watermark.controller;
 import com.company.watermark.dto.PublicationDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.RestAssured;
+import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +18,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 /**
- * Base class for controller Integration Tests.
+ * Base class for Integration Tests.
  */
 
 @RunWith(SpringRunner.class)
@@ -31,36 +33,28 @@ public abstract class BaseControllerIT {
     @Value("http://localhost:${local.server.port}/watermark")
     protected String watermarkBase;
 
-    protected Long createBook(PublicationDTO book) throws Exception {
-        return RestAssured.given()
-            .contentType(JSON)
-            .body(objectMapper.writeValueAsString(book))
-        .when()
-            .post(publicationBase + "/create").prettyPeek()
-        .then()
-            .statusCode(HttpStatus.OK.value())
-            .body("id", notNullValue())
-            .body("content", is("BOOK"))
-            .body("title", is("bookTitle"))
-            .body("author", is("bookAuthor"))
-            .body("topic", is("BUSINESS"))
-        .extract()
-            .jsonPath()
-            .getLong("id");
+    protected PublicationDTO book;
+    protected PublicationDTO journal;
+
+    @Before
+    public void setUp() throws Exception {
+        book = objectMapper.readValue(getClass().getResourceAsStream("/json/publication_dto_book.json"), PublicationDTO.class);
+        journal = objectMapper.readValue(getClass().getResourceAsStream("/json/publication_dto_journal.json"), PublicationDTO.class);
     }
 
-    protected Long createJournal(PublicationDTO journal) throws Exception {
+    protected Long createAndVerifyPublication(PublicationDTO publication, Matcher<Object> topicMatcher) throws Exception {
         return RestAssured.given()
             .contentType(JSON)
-            .body(objectMapper.writeValueAsString(journal))
+            .body(objectMapper.writeValueAsString(publication))
         .when()
             .post(publicationBase + "/create").prettyPeek()
         .then()
             .statusCode(HttpStatus.OK.value())
             .body("id", notNullValue())
-            .body("content", is("JOURNAL"))
-            .body("title", is("journalTitle"))
-            .body("author", is("journalAuthor"))
+            .body("content", is(publication.getContent().toString()))
+            .body("title", is(publication.getTitle()))
+            .body("author", is(publication.getAuthor()))
+            .body("topic", topicMatcher)
         .extract()
             .jsonPath()
             .getLong("id");

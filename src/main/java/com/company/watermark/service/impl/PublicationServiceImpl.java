@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import java.util.Optional;
 
-import static com.company.watermark.domain.Watermark.Status.NEW;
+import static com.company.watermark.domain.Watermark.Status.*;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
@@ -74,19 +74,29 @@ public class PublicationServiceImpl implements PublicationService {
         final Publication publication = find(publicationId, content);
 
         final Watermark watermark = publication.getWatermark();
-        if (nonNull(watermark)) {
-            throw new WatermarkException(String.format("Document with id=%s already has watermark with uuid=%s",
-                    publication.getId(), watermark.getId()));
+        if (nonNull(watermark) && PENDING.equals(watermark.getStatus())) {
+            throw new WatermarkException(String.format("Document with id=%s is already pending for watermark property",
+                    publication.getId()));
         }
 
         publication.setWatermark(Watermark.builder()
                 .publication(publication)
-                .status(NEW.getName())
+                .status(PENDING.getName())
                 .build());
 
-        final Watermark createdWatermark = createOrUpdate(publication).getWatermark();
-        log.debug("publication with id={} related to watermark {}", publication.getId(), createdWatermark);
-        return createdWatermark;
+        final Watermark updatedWatermark = createOrUpdate(publication).getWatermark();
+        log.debug("publication with id={} related to watermark {}", publication.getId(), updatedWatermark);
+        return updatedWatermark;
+    }
+
+    @Override
+    public void updateWatermarkStatus(Publication publication, String watermarkProperty) {
+        log.debug("::updateWatermarkStatus {}", publication);
+
+        publication.getWatermark().setProperty(watermarkProperty.isEmpty() ? null : watermarkProperty);
+        publication.getWatermark().setStatus(watermarkProperty.isEmpty() ? FAILED.getName() : SUCCESS.getName());
+
+        createOrUpdate(publication);
     }
 
     private PublicationRepository resolveRepository(Content content) {

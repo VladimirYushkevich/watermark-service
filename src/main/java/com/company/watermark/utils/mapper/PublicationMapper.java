@@ -1,4 +1,4 @@
-package com.company.watermark.utils;
+package com.company.watermark.utils.mapper;
 
 import com.company.watermark.domain.Book;
 import com.company.watermark.domain.Content;
@@ -46,7 +46,7 @@ public final class PublicationMapper {
     }
 
     public static PublicationDTO buildPublicationDTO(Publication publication) {
-        PublicationDTO dto = new PublicationDTO();
+        final PublicationDTO dto = new PublicationDTO();
 
         copyProperties(publication, dto);
         dto.setContent(publication.getContent());

@@ -2,6 +2,7 @@ package com.company.watermark.service;
 
 import com.company.watermark.domain.Content;
 import com.company.watermark.domain.Publication;
+import com.company.watermark.domain.Watermark;
 import com.company.watermark.exception.WatermarkException;
 import rx.Observable;
 
@@ -33,5 +34,5 @@ public interface WatermarkService {
      * @param ticketId Id of ticket/watermark
      * @return Ticket with optional document
      */
-    Publication pollWatermarkStatus(UUID ticketId);
+    Observable<Watermark> pollWatermarkStatus(UUID ticketId);
 }

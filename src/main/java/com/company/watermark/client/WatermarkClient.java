@@ -16,7 +16,7 @@ import static com.company.watermark.utils.WatermarkGenerator.generateWatermark;
 @Slf4j
 public class WatermarkClient {
 
-    @Value("${watermark.client.delayInMilliseconds:1000}")
+    @Value("${watermark.client.delayInMilliseconds}")
     private int watermarkTimeOut;
 
     public String createWatermark(List<String> watermarkProperties) {

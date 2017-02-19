@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 
-import static com.company.watermark.utils.PublicationMapper.*;
+import static com.company.watermark.utils.mapper.PublicationMapper.*;
 
 @RestController
 @RequestMapping("/publication")
@@ -27,8 +27,6 @@ public class PublicationController {
 
     private final PublicationService publicationService;
     private final PublicationDTOValidator validator;
-
-
 
     @InitBinder("publicationDTO")
     private void initBinder(WebDataBinder binder) {

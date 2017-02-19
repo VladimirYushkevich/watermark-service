@@ -21,4 +21,6 @@ public interface PublicationService {
     Page<Publication> findAllByPage(Pageable pageable, Content content);
 
     Watermark setWatermark(Long publicationId, Content content);
+
+    void updateWatermarkStatus(Publication publication, String watermarkProperty);
 }

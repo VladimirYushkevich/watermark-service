@@ -1,8 +1,6 @@
 package com.company.watermark;
 
-import com.company.watermark.domain.Book;
-import com.company.watermark.domain.Journal;
-import com.company.watermark.domain.Watermark;
+import com.company.watermark.domain.*;
 
 import static com.company.watermark.domain.Book.Topic.SCIENCE;
 import static com.company.watermark.domain.Watermark.Status.NEW;
@@ -39,5 +37,15 @@ public class RepositoryDataFactory {
                 .build());
 
         return journal;
+    }
+
+    public static Publication createPublication(Content content) {
+        switch (content) {
+            case BOOK:
+                return createBook();
+            case JOURNAL:
+                return createJournal();
+        }
+        return null;
     }
 }

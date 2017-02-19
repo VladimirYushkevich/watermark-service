@@ -30,19 +30,38 @@ public class WatermarkCommand extends BaseCommand<String> {
         this.watermarkClient = watermarkClient;
     }
 
+    /**
+     * Executes time expensive call to {@link WatermarkClient} in separate thread.
+     *
+     * @return Observable of watermark property
+     */
     @Override
     protected Observable<String> construct() {
         log.debug("::constructed observable for {}", watermarkProperties);
         return Observable.<String>create(subscriber -> {
-                    subscriber.onNext(watermarkClient.createWatermark(watermarkProperties));
-                    subscriber.onCompleted();
+                    try {
+                        subscriber.onNext(watermarkClient.createWatermark(watermarkProperties));
+                        subscriber.onCompleted();
+                    } catch (Throwable ex) {
+                        log.error("Failure get watermark for {}", watermarkProperties);
+                        subscriber.onError(ex);
+                    }
                 }
         ).subscribeOn(Schedulers.computation());
     }
 
     @Override
     protected Observable<String> resumeWithFallback() {
-        log.debug("::resumeWithFallback");
-        return Observable.empty();
+        return Observable.create(subscriber -> {
+            try {
+                handleErrors();
+                subscriber.onNext("");
+                subscriber.onCompleted();
+                log.debug("::resumeWithFallback");
+            } catch (Exception ex) {
+                log.error("Failure get watermark in fallback for {}", watermarkProperties);
+                subscriber.onError(ex);
+            }
+        });
     }
 }

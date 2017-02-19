@@ -26,7 +26,7 @@ public class WatermarkController {
     public DeferredResult<UUID> watermarkDocument(@Validated @RequestBody PublicationRequestDTO request) {
         log.debug("::watermarkDocument {}", request);
 
-        DeferredResult<UUID> deferredResult = new DeferredResult<>(10000L);
+        DeferredResult<UUID> deferredResult = new DeferredResult<>();
         watermarkService.watermarkDocument(request.getPublicationId(), request.getContent())
                 .subscribe(deferredResult::setResult);
 

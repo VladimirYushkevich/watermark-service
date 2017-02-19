@@ -1,4 +1,4 @@
-package com.company.watermark.hystrix;
+package com.company.watermark.client.command;
 
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;

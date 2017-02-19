@@ -1,5 +1,6 @@
-package com.company.watermark.hystrix;
+package com.company.watermark.client.command;
 
+import com.company.watermark.client.WatermarkClient;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

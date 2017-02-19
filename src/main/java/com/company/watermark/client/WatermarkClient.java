@@ -1,4 +1,4 @@
-package com.company.watermark.hystrix;
+package com.company.watermark.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +16,7 @@ import static com.company.watermark.utils.WatermarkGenerator.generateWatermark;
 @Slf4j
 public class WatermarkClient {
 
-    @Value("${watermark.delayInMilliseconds:1000}")
+    @Value("${watermark.client.delayInMilliseconds:1000}")
     private int watermarkTimeOut;
 
     public String createWatermark(List<String> watermarkProperties) {

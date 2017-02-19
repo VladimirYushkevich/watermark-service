@@ -1,12 +1,12 @@
 package com.company.watermark.service.impl;
 
+import com.company.watermark.client.WatermarkClient;
 import com.company.watermark.domain.Book;
 import com.company.watermark.domain.Journal;
 import com.company.watermark.domain.Publication;
 import com.company.watermark.domain.Watermark;
 import com.company.watermark.exception.NotFoundException;
 import com.company.watermark.exception.WatermarkException;
-import com.company.watermark.hystrix.WatermarkClient;
 import com.company.watermark.service.PublicationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

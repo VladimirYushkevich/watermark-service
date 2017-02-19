@@ -28,6 +28,8 @@ public class PublicationController {
     private final PublicationService publicationService;
     private final PublicationDTOValidator validator;
 
+
+
     @InitBinder("publicationDTO")
     private void initBinder(WebDataBinder binder) {
         binder.setValidator(validator);

@@ -1,12 +1,12 @@
 package com.company.watermark.service.impl;
 
+import com.company.watermark.client.WatermarkClient;
+import com.company.watermark.client.command.WatermarkCommand;
 import com.company.watermark.domain.Content;
 import com.company.watermark.domain.Publication;
 import com.company.watermark.domain.Watermark;
 import com.company.watermark.exception.NotFoundException;
 import com.company.watermark.exception.WatermarkException;
-import com.company.watermark.hystrix.WatermarkClient;
-import com.company.watermark.hystrix.WatermarkCommand;
 import com.company.watermark.service.PublicationService;
 import com.company.watermark.service.WatermarkService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class WatermarkServiceImpl implements WatermarkService {
     private final PublicationService publicationService;
     private final WatermarkClient watermarkClient;
 
-    @Value("${hystrix.command.WatermarkCommand.timeoutInMilliseconds:3000}")
+    @Value("${hystrix.command.WatermarkCommand.timeoutInMilliseconds}")
     private int watermarkTimeOut;
     @Value("${hystrix.command.watermark.groupKey}")
     private String watermarkGroupKey;

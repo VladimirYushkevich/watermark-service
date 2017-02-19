@@ -41,4 +41,9 @@ c) Provide Unit-Tests to ensure the functionality of the service.
 ```
 curl localhost:8080/publication/1?content=BOOK | jq
 ```
-
+```
+curl POST localhost:8080/publication/create -d '{"content": "BOOK", "title": "bookTitle", "author": "bookAuthor", "topic": "BUSINESS"}' -H 'Content-Type: application/json' | jq
+```
+```
+curl POST localhost:8080/watermark -d '{"publicationId": 5, "content": "BOOK"}' -H 'Content-Type: application/json' | jq
+```

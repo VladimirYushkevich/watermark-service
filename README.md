@@ -3,10 +3,10 @@ Watermark
 ### Description:
 
 Watermark-service is a Spring boot application.
-It uses in memory h2database in the persistence layer with appropriate domain model. Database populated on star up via
+It uses in memory h2database in the persistence layer with appropriate domain model. Database populated during start up via
 corresponding **DataLoader** (and **TestDataLoader** for test profile)
 All Watermark requests handled asynchronously by **WatermarkController**. For CRUD operations with publications(book and journals)
-has been created **WatermarkController**.
+**WatermarkController** has been created.
 Watermark processing done by mocked WatermarkClient with configured time delay via Hystrix Command.
 Currently it takes 30 sec. See *watermark.client.delayInMilliseconds* in **application.properties** file.
 
@@ -46,7 +46,7 @@ Some tests are a bit time consuming (total time ~ 1min), to speed up lunch:
 
 ### Usage:
 
-[In memory DB console](http://localhost:8080/h2-console)
+[In memory DB console](http://localhost:8080/h2-console)  
 [SWAGGER](http://localhost:8080/swagger-ui.html)
 
 Or if you prefer CLI:

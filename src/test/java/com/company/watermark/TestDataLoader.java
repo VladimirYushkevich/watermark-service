@@ -5,7 +5,6 @@ import com.company.watermark.domain.Journal;
 import com.company.watermark.domain.Watermark;
 import com.company.watermark.repository.BookRepository;
 import com.company.watermark.repository.JournalRepository;
-import com.company.watermark.repository.WatermarkRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
@@ -31,7 +30,6 @@ public class TestDataLoader implements ApplicationListener<ContextRefreshedEvent
 
     private final BookRepository bookRepository;
     private final JournalRepository journalRepository;
-    private final WatermarkRepository watermarkRepository;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {

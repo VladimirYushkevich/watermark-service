@@ -1,5 +1,6 @@
 package com.company.watermark.controller;
 
+import com.company.watermark.domain.Content;
 import com.company.watermark.dto.PublicationDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.restassured.RestAssured;
@@ -42,21 +43,57 @@ public abstract class BaseControllerIT {
         journal = objectMapper.readValue(getClass().getResourceAsStream("/json/publication_dto_journal.json"), PublicationDTO.class);
     }
 
-    protected Long createAndVerifyPublication(PublicationDTO publication, Matcher<Object> topicMatcher) throws Exception {
+    protected Long createAndVerifyPublication(PublicationDTO publicationDTO, Matcher<Object> topicMatcher) throws Exception {
         return RestAssured.given()
             .contentType(JSON)
-            .body(objectMapper.writeValueAsString(publication))
+            .body(objectMapper.writeValueAsString(publicationDTO))
         .when()
             .post(publicationBase + "/create").prettyPeek()
         .then()
-            .statusCode(HttpStatus.OK.value())
+            .statusCode(HttpStatus.CREATED.value())
             .body("id", notNullValue())
-            .body("content", is(publication.getContent().toString()))
-            .body("title", is(publication.getTitle()))
-            .body("author", is(publication.getAuthor()))
+            .body("content", is(publicationDTO.getContent().toString()))
+            .body("title", is(publicationDTO.getTitle()))
+            .body("author", is(publicationDTO.getAuthor()))
             .body("topic", topicMatcher)
         .extract()
             .jsonPath()
             .getLong("id");
+    }
+
+    protected void testUpdatePublication_success(PublicationDTO originalPublicationDTO, PublicationDTO publicationDTOToUpdate,
+                                                  Matcher<Object> topicMatcher) throws Exception {
+        RestAssured.given()
+            .contentType(JSON)
+            .body(objectMapper.writeValueAsString(publicationDTOToUpdate))
+        .when()
+            .put(publicationBase + "/update").prettyPeek()
+        .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .body("id", notNullValue())
+            .body("content", is(originalPublicationDTO.getContent().toString()))
+            .body("title", is(originalPublicationDTO.getTitle()))
+            .body("author", is(publicationDTOToUpdate.getAuthor()))
+            .body("topic", topicMatcher);
+    }
+
+    protected void testUpdatePublication_fail(PublicationDTO publicationDTOToUpdate) throws Exception {
+        RestAssured.given()
+            .contentType(JSON)
+            .body(objectMapper.writeValueAsString(publicationDTOToUpdate))
+        .when()
+            .put(publicationBase + "/update").prettyPeek()
+        .then()
+            .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
+
+    protected PublicationDTO resolvePublicationDTO(Content content) {
+        switch (content) {
+            case BOOK:
+                return book;
+            case JOURNAL:
+                return journal;
+        }
+        return null;
     }
 }

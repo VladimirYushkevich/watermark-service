@@ -22,8 +22,6 @@ public abstract class BaseCommand<R> extends HystrixObservableCommand<R> {
                         .withExecutionTimeoutInMilliseconds(timeout))
         );
         this.debugMessage = debugMessage;
-
-        log.debug("init with time out {}", timeout);
     }
 
     protected void handleErrors() {

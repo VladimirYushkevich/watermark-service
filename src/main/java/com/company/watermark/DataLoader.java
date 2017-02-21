@@ -15,8 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 
 import static com.company.watermark.domain.Book.Topic.*;
-import static com.company.watermark.domain.Watermark.Status.NEW;
-import static com.company.watermark.domain.Watermark.Status.SUCCESS;
+import static com.company.watermark.domain.Watermark.Status.*;
 import static com.company.watermark.utils.WatermarkGenerator.generateWatermark;
 
 /**
@@ -71,8 +70,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
                 .build();
         book3.setWatermark(Watermark.builder()
                 .publication(book3)
-                .property(generateWatermark(book3.getWatermarkProperties()))
-                .status(SUCCESS.getName())
+                .status(FAILED.getName())
                 .build());
 
         bookRepository.save(book3);

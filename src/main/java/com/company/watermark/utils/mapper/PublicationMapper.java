@@ -8,11 +8,16 @@ import com.company.watermark.dto.PageDTO;
 import com.company.watermark.dto.PublicationDTO;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.data.domain.Page;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.company.watermark.domain.Content.BOOK;
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.beans.BeanUtils.copyProperties;
 
@@ -32,7 +37,9 @@ public final class PublicationMapper {
                 publication = new Book();
                 final Book.Topic topic = dto.getTopic();
                 copyProperties(dto, publication);
-                ((Book) publication).setTopic(topic.getName());
+                if (nonNull(topic)) {
+                    ((Book) publication).setTopic(topic.getName());
+                }
                 break;
             case JOURNAL:
                 publication = new Journal();
@@ -67,5 +74,18 @@ public final class PublicationMapper {
                 .totalEntries(publicationPage.getTotalElements())
                 .entries(entries)
                 .build();
+    }
+
+    public static String[] getNullPropertyNames (Object source) {
+        final BeanWrapper src = new BeanWrapperImpl(source);
+        java.beans.PropertyDescriptor[] pds = src.getPropertyDescriptors();
+
+        Set<String> emptyNames = new HashSet<>();
+        for(java.beans.PropertyDescriptor pd : pds) {
+            Object srcValue = src.getPropertyValue(pd.getName());
+            if (srcValue == null) emptyNames.add(pd.getName());
+        }
+        String[] result = new String[emptyNames.size()];
+        return emptyNames.toArray(result);
     }
 }

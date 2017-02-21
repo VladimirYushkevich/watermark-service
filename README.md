@@ -2,7 +2,13 @@ Watermark
 =
 ### Description:
 
-Spring boot application
+Watermark-service is a Spring boot application.
+It uses in memory h2database in the persistence layer with appropriate domain model. Database populated on star up via
+corresponding **DataLoader** (and **TestDataLoader** for test profile)
+All Watermark requests handled asynchronously by **WatermarkController**. For CRUD operations with publications(book and journals)
+has been created **WatermarkController**.
+Watermark processing done by mocked WatermarkClient with configured time delay via Hystrix Command.
+Currently it takes 30 sec. See *watermark.client.delayInMilliseconds* in **application.properties** file.
 
 #### Watermark-Test
 
@@ -33,11 +39,17 @@ c) Provide Unit-Tests to ensure the functionality of the service.
 ```
 ./gradlew clean build -i && java -jar build/libs/watermark-0.0.1-SNAPSHOT.jar
 ```
+Some tests are a bit time consuming (total time ~ 1min), to speed up lunch:
+```
+./gradlew clean build -x test && java -jar build/libs/watermark-0.0.1-SNAPSHOT.jar
+```
 
 ### Usage:
-[In memory DB console](http://localhost:8080/h2-console)
 
-#### API calls:
+[In memory DB console](http://localhost:8080/h2-console)
+[SWAGGER](http://localhost:8080/swagger-ui.html)
+
+Or if you prefer CLI:
 ```
 curl localhost:8080/publication/1?content=BOOK | jq
 ```
@@ -47,3 +59,14 @@ curl POST localhost:8080/publication/create -d '{"content": "BOOK", "title": "bo
 ```
 curl POST localhost:8080/watermark -d '{"publicationId": 5, "content": "BOOK"}' -H 'Content-Type: application/json' | jq
 ```
+```
+curl localhost:8080/watermark/eb849f71-cadf-4084-b85d-a588a6143479 | jq
+```
+```
+curl -X GET --header 'Accept: application/json' 'http://localhost:8080/publication/list?content=BOOK&page=0&size=2&sort=author' | jq
+```
+
+### Environment
+
+macOS Sierra (version 10.12.1)
+Java(TM) SE Runtime Environment (build 1.8.0_92-b14)

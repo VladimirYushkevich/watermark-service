@@ -30,6 +30,20 @@ public class PublicationServiceIT extends BasePublicationServiceIT {
     }
 
     @Test
+    public void testWatermarkSetUp_fail_notAllowedToUpdatePending() throws Exception {
+        try {
+            testWatermarkSetUp_fail_notAllowedToUpdatePending(BOOK);
+            fail("Should throw exception");
+        } catch (WatermarkException ignored) {
+        }
+        try {
+            testWatermarkSetUp_fail_notAllowedToUpdatePending(JOURNAL);
+            fail("Should throw exception");
+        } catch (WatermarkException ignored) {
+        }
+    }
+
+    @Test
     public void testWatermarkStatusUpdateForPublication() throws Exception {
         testWatermarkStatusUpdateForPublication(BOOK);
         testWatermarkStatusUpdateForPublication(JOURNAL);

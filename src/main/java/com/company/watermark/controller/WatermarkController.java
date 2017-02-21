@@ -4,6 +4,8 @@ import com.company.watermark.dto.PublicationRequestDTO;
 import com.company.watermark.dto.TicketDTO;
 import com.company.watermark.service.WatermarkService;
 import com.company.watermark.utils.mapper.WatermarkMapper;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -21,11 +23,13 @@ import java.util.UUID;
 @RequestMapping("/watermark")
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 @Slf4j
+@Api(description = "Async operations for watermarks")
 public class WatermarkController {
 
     private final WatermarkService watermarkService;
 
     @RequestMapping(method = RequestMethod.POST)
+    @ApiOperation(value = "For a given content document returns a ticket UUID.")
     public DeferredResult<UUID> watermarkDocument(@Validated @RequestBody PublicationRequestDTO request) {
         log.debug("::watermarkDocument {}", request);
 
@@ -37,6 +41,8 @@ public class WatermarkController {
     }
 
     @RequestMapping(value = "/{ticket_id}", method = RequestMethod.GET, params = {"ticket_id!="})
+    @ApiOperation(value = "Endpoint to poll the status of watermark processing. If the watermarking is finished the " +
+            "document can be retrieved with the ticket.")
     public DeferredResult<TicketDTO> getTicketById(@PathVariable("ticket_id") UUID ticketId) {
         log.debug("::getTicketById {}", ticketId);
 

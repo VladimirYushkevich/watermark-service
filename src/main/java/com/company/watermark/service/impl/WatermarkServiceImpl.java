@@ -5,6 +5,7 @@ import com.company.watermark.client.command.WatermarkCommand;
 import com.company.watermark.domain.Content;
 import com.company.watermark.domain.Publication;
 import com.company.watermark.domain.Watermark;
+import com.company.watermark.exception.NotFoundException;
 import com.company.watermark.exception.WatermarkException;
 import com.company.watermark.repository.WatermarkRepository;
 import com.company.watermark.service.PublicationService;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import rx.Observable;
 
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -48,12 +50,19 @@ public class WatermarkServiceImpl implements WatermarkService {
     @Override
     public Observable<Watermark> pollWatermarkStatus(UUID ticketId) {
         return Observable.create(subscriber -> {
-                    subscriber.onNext(watermarkRepository.findById(ticketId));
+                    subscriber.onNext(find(ticketId));
                     subscriber.onCompleted();
                     subscriber.onError(
                             new WatermarkException(String.format("can't retrieve watermark with id=%s", ticketId)));
                 }
         );
+    }
+
+    private Watermark find(UUID ticketId) {
+        final Watermark watermark = Optional.ofNullable(watermarkRepository.findById(ticketId))
+                .orElseThrow(NotFoundException::new);
+        log.debug("found {}", watermark);
+        return watermark;
     }
 
     /**

@@ -17,6 +17,7 @@ import java.util.UUID;
 import static com.company.watermark.domain.Watermark.Status.*;
 import static com.jayway.restassured.http.ContentType.JSON;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.*;
@@ -27,6 +28,7 @@ public abstract class BaseWatermarkControllerIT extends BaseControllerIT {
     private WatermarkClient watermarkClient;
 
     @Before
+    @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
         super.setUp();
 
@@ -35,57 +37,73 @@ public abstract class BaseWatermarkControllerIT extends BaseControllerIT {
 
     protected void testWatermarkPublicationAsync_success(PublicationDTO publicationDTO, Content content,
                                                          Matcher<Object> topicMatcher) throws Exception {
+        //given
+        delayWatermarkClient(2000L);
+        //when
         Long publicationId1 = createAndVerifyPublication(publicationDTO, topicMatcher);
         Long publicationId2 = createAndVerifyPublication(publicationDTO, topicMatcher);
-
-        delayWatermarkClient(2000L);
-
-        getAndVerifyTicketId(publicationId1, content);
-        getAndVerifyTicketId(publicationId2, content);
+        //then
+        triggerWatermarkCreationAndVerifyTicketId(publicationId1, content);
+        triggerWatermarkCreationAndVerifyTicketId(publicationId2, content);
 
         //allow main thread to write everything in log
         Thread.sleep(5000L);
     }
 
-    protected void testWatermarkTicketStatus_success(PublicationDTO publicationDTO, Content content,
-                                                     Matcher<Object> topicMatcher) throws Exception {
-        Long publicationId = createAndVerifyPublication(publicationDTO, topicMatcher);
-
-        delayWatermarkClient(2000L);
-
-        final UUID ticketId = getAndVerifyTicketId(publicationId, content);
-
-        pollAndVerifyTicketStatus(ticketId, PENDING, nullValue());
-    }
-
-    protected void testWatermarkTicketStatusFlow_success(PublicationDTO publicationDTO, Content content,
-                                                         Matcher<Object> topicMatcher) throws Exception {
-        Long publicationId = createAndVerifyPublication(publicationDTO, topicMatcher);
-
+    protected void testWatermarkTicketStatusFlow_success_updateAllowedAfterSuccess(PublicationDTO publicationDTO, Content content,
+                                                                                   Matcher<Object> topicMatcher) throws Exception {
+        //given
         delayWatermarkClient(500L);
 
-        final UUID ticketId = getAndVerifyTicketId(publicationId, content);
-
+        Long publicationId = createAndVerifyPublication(publicationDTO, topicMatcher);
+        final UUID ticketId = triggerWatermarkCreationAndVerifyTicketId(publicationId, content);
         pollAndVerifyTicketStatus(ticketId, PENDING, nullValue());
-
         Thread.sleep(1000L);
-
         pollAndVerifyTicketStatus(ticketId, SUCCESS, notNullValue());
+        //when
+        final PublicationDTO publicationToUpdate = PublicationDTO.builder().content(content).author("newAuthor").build();
+        publicationToUpdate.setId(publicationId);
+        testUpdatePublication_success(resolvePublicationDTO(publicationToUpdate.getContent()), publicationToUpdate, topicMatcher);
+        //then
+        pollAndVerifyTicketStatus(ticketId, NEW, nullValue());
+
+        //allow main thread to write everything in log
+        Thread.sleep(1000L);
     }
 
-    protected void testWatermarkTicketStatusFlow_fail_timeout(PublicationDTO publicationDTO, Content content,
-                                                              Matcher<Object> topicMatcher) throws Exception {
-        Long publicationId = createAndVerifyPublication(publicationDTO, topicMatcher);
-
+    protected void testWatermarkTicketStatusFlow_success_updateAllowedAfterFail(PublicationDTO publicationDTO, Content content,
+                                                                                Matcher<Object> topicMatcher) throws Exception {
+        //given
         delayWatermarkClient(3100L);
 
-        final UUID ticketId = getAndVerifyTicketId(publicationId, content);
-
+        Long publicationId = createAndVerifyPublication(publicationDTO, topicMatcher);
+        final UUID ticketId = triggerWatermarkCreationAndVerifyTicketId(publicationId, content);
         pollAndVerifyTicketStatus(ticketId, PENDING, nullValue());
-
         Thread.sleep(3100L);
-
         pollAndVerifyTicketStatus(ticketId, FAILED, nullValue());
+        //when
+        final PublicationDTO publicationToUpdate = PublicationDTO.builder().content(content).author("newAuthor").build();
+        publicationToUpdate.setId(publicationId);
+        testUpdatePublication_success(resolvePublicationDTO(publicationToUpdate.getContent()), publicationToUpdate, topicMatcher);
+        //then
+        pollAndVerifyTicketStatus(ticketId, NEW, nullValue());
+
+        //allow main thread to write everything in log
+        Thread.sleep(1000L);
+    }
+
+    protected void testWatermarkTicketStatusFlow_fail_updateNotAllowed(PublicationDTO publicationDTO, Content content,
+                                                                       Matcher<Object> topicMatcher) throws Exception {
+        //given
+        delayWatermarkClient(2000L);
+
+        Long publicationId = createAndVerifyPublication(publicationDTO, topicMatcher);
+        final UUID ticketId = triggerWatermarkCreationAndVerifyTicketId(publicationId, content);
+        pollAndVerifyTicketStatus(ticketId, PENDING, nullValue());
+        //when
+        final PublicationDTO publicationToUpdate = PublicationDTO.builder().content(content).author("newAuthor").build();
+        publicationToUpdate.setId(publicationId);
+        testUpdatePublication_fail(publicationToUpdate);
     }
 
     private void pollAndVerifyTicketStatus(UUID ticketId, Watermark.Status status, Matcher<Object> documentMatcher) throws Exception {
@@ -98,7 +116,7 @@ public abstract class BaseWatermarkControllerIT extends BaseControllerIT {
             .body("document", documentMatcher);
     }
 
-    private UUID getAndVerifyTicketId(Long publicationId, Content content) throws Exception {
+    private UUID triggerWatermarkCreationAndVerifyTicketId(Long publicationId, Content content) throws Exception {
         return RestAssured.given()
             .contentType(JSON)
             .body(objectMapper.writeValueAsString(PublicationRequestDTO.builder()

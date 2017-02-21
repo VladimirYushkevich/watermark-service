@@ -12,7 +12,14 @@ import org.springframework.data.domain.Pageable;
 
 public interface PublicationService {
 
-    Publication createOrUpdate(Publication publication);
+    Publication create(Publication publication);
+
+    /**
+     * Updates publication only with status different than PENDING.
+     * @param publication Publication to updated
+     * @return Updated publication
+     */
+    Publication update(Publication publication);
 
     void delete(Long publicationId, Content content);
 

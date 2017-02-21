@@ -10,8 +10,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static com.company.watermark.RepositoryDataFactory.createPublication;
+import java.util.Objects;
+
+import static com.company.watermark.RepositoryDataFactory.buildPublication;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -25,16 +28,18 @@ public abstract class BasePublicationRepositoryIT {
     @Autowired
     private TestEntityManager entityManager;
 
+    @SuppressWarnings("unchecked")
     protected void testPublicationCrudOperations(Content content) {
         final PublicationRepository publicationRepository = resolveRepository(content);
 
         //given
-        final Publication publication = createPublication(content);
+        final Publication publication = buildPublication(content);
         //when
         entityManager.persist(publication);
         //then
         assertThat(publicationRepository.findAll().size(), is(1));
-        assertThat(publicationRepository.findOne(publication.getId()), is(publication));
+        assertNotNull(publication);
+        assertThat(Objects.requireNonNull(publicationRepository).findOne(publication.getId()), is(publication));
 
         //given
         publication.setAuthor("newAuthor");
@@ -49,13 +54,14 @@ public abstract class BasePublicationRepositoryIT {
         assertThat(publicationRepository.findAll().size(), is(0));
     }
 
+    @SuppressWarnings("unchecked")
     public void testPublicationPageable(Content content) throws Exception {
         final PublicationRepository publicationRepository = resolveRepository(content);
 
         //given
-        entityManager.persist(createPublication(content));
-        entityManager.persist(createPublication(content));
-        entityManager.persist(createPublication(content));
+        entityManager.persist(buildPublication(content));
+        entityManager.persist(buildPublication(content));
+        entityManager.persist(buildPublication(content));
 
         //when
         final Page<Publication> publicationPage1 = publicationRepository.findAll(new PageRequest(0, 2));
@@ -76,7 +82,8 @@ public abstract class BasePublicationRepositoryIT {
                 return bookRepository;
             case JOURNAL:
                 return journalRepository;
+            default:
+                throw new RuntimeException();
         }
-        return null;
     }
 }

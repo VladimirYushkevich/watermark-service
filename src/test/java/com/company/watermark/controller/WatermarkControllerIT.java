@@ -16,20 +16,20 @@ public class WatermarkControllerIT extends BaseWatermarkControllerIT {
     }
 
     @Test
-    public void testWatermarkTicketStatus_success() throws Exception {
-        testWatermarkTicketStatus_success(book, BOOK, notNullValue());
-        testWatermarkTicketStatus_success(journal, JOURNAL, nullValue());
+    public void testWatermarkTicketStatusFlow_fail_updateNotAllowed() throws Exception {
+        testWatermarkTicketStatusFlow_fail_updateNotAllowed(book, BOOK, notNullValue());
+        testWatermarkTicketStatusFlow_fail_updateNotAllowed(journal, JOURNAL, nullValue());
     }
 
     @Test
-    public void testWatermarkTicketStatusFlow_success() throws Exception {
-        testWatermarkTicketStatusFlow_success(book, BOOK, notNullValue());
-        testWatermarkTicketStatusFlow_success(journal, JOURNAL, nullValue());
+    public void testWatermarkTicketStatusFlow_success_updateAllowedAfterSuccess() throws Exception {
+        testWatermarkTicketStatusFlow_success_updateAllowedAfterSuccess(book, BOOK, notNullValue());
+        testWatermarkTicketStatusFlow_success_updateAllowedAfterSuccess(journal, JOURNAL, nullValue());
     }
 
     @Test
-    public void testWatermarkTicketStatusFlow_fail_timeout() throws Exception {
-        testWatermarkTicketStatusFlow_fail_timeout(book, BOOK, notNullValue());
-        testWatermarkTicketStatusFlow_fail_timeout(journal, JOURNAL, nullValue());
+    public void testWatermarkTicketStatusFlow_success_updateAllowedAfterFail() throws Exception {
+        testWatermarkTicketStatusFlow_success_updateAllowedAfterFail(book, BOOK, notNullValue());
+        testWatermarkTicketStatusFlow_success_updateAllowedAfterFail(journal, JOURNAL, nullValue());
     }
 }

@@ -17,6 +17,7 @@ public abstract class AbstractDTOValidator<T> implements SmartValidator {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void validate(Object target, Errors errors, Object... validationHints) {
 
         Set<Class<?>> hints = new HashSet<>();
@@ -32,6 +33,7 @@ public abstract class AbstractDTOValidator<T> implements SmartValidator {
     protected abstract void validate(T dto, Errors errors, Set<Class<?>> hints);
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean supports(Class<?> clazz) {
         return ((Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0]).isAssignableFrom(clazz);

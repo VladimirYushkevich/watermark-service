@@ -39,13 +39,14 @@ public class RepositoryDataFactory {
         return journal;
     }
 
-    public static Publication createPublication(Content content) {
+    public static Publication buildPublication(Content content) {
         switch (content) {
             case BOOK:
                 return createBook();
             case JOURNAL:
                 return createJournal();
+            default:
+                throw new RuntimeException();
         }
-        return null;
     }
 }

@@ -52,12 +52,12 @@ public class WatermarkCommand extends BaseCommand<String> {
 
     @Override
     protected Observable<String> resumeWithFallback() {
+        log.warn("::resumeWithFallback");
         return Observable.create(subscriber -> {
             try {
                 handleErrors();
                 subscriber.onNext("");
                 subscriber.onCompleted();
-                log.debug("::resumeWithFallback");
             } catch (Exception ex) {
                 log.error("Failure get watermark in fallback for {}", watermarkProperties);
                 subscriber.onError(ex);

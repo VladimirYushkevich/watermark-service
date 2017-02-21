@@ -5,10 +5,13 @@ Watermark
 Watermark-service is a Spring boot application.
 It uses in memory h2database in the persistence layer with appropriate domain model. Database populated during start up via
 corresponding **DataLoader** (and **TestDataLoader** for test profile)
-All Watermark requests handled asynchronously by **WatermarkController**. For CRUD operations with publications(book and journals)
-**WatermarkController** has been created.
+All Watermark requests handled asynchronously by **WatermarkController** (Spring **DeferredResult** + rx **Observable**). 
+For CRUD operations with publications(book and journals) sync **WatermarkController** has been created.
+
 Watermark processing done by mocked WatermarkClient with configured time delay via Hystrix Command.
 Currently it takes 30 sec. See *watermark.client.delayInMilliseconds* in **application.properties** file.
+
+It is not allowed to update Publication during Watermark creation.
 
 #### Watermark-Test
 
@@ -68,5 +71,5 @@ curl -X GET --header 'Accept: application/json' 'http://localhost:8080/publicati
 
 ### Environment
 
-macOS Sierra (version 10.12.1)
+macOS Sierra (version 10.12.1)  
 Java(TM) SE Runtime Environment (build 1.8.0_92-b14)

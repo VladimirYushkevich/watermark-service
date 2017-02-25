@@ -79,8 +79,13 @@ public class WatermarkServiceImpl implements WatermarkService {
 
         final Watermark createdWatermark = publicationService.setWatermark(publicationId, content);
 
-        new WatermarkCommand(watermarkGroupKey, watermarkTimeOut, "watermarkDocument",
-                createdWatermark.getPublication().getWatermarkProperties(), watermarkClient).observe()
+        WatermarkCommand.builder()
+                .groupKey(watermarkGroupKey)
+                .debugMessage("watermarkDocument")
+                .watermarkProperties(createdWatermark.getPublication().getWatermarkProperties())
+                .watermarkClient(watermarkClient)
+                .build()
+                .observe()
                 .subscribe(o -> publicationService.updateWatermarkStatus(createdWatermark.getPublication(), o));
 
         return createdWatermark.getId();

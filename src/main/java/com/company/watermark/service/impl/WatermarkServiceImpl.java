@@ -82,6 +82,7 @@ public class WatermarkServiceImpl implements WatermarkService {
         WatermarkCommand.builder()
                 .groupKey(watermarkGroupKey)
                 .debugMessage("watermarkDocument")
+                .timeout(watermarkTimeOut)
                 .watermarkProperties(createdWatermark.getPublication().getWatermarkProperties())
                 .watermarkClient(watermarkClient)
                 .build()

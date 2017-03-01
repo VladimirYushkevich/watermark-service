@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/VladimirYushkevich/watermark-service.svg?branch=master)](https://travis-ci.org/VladimirYushkevich/watermark-service)
+
 Watermark
 =
 ### Description:

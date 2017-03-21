@@ -31,7 +31,6 @@ public enum Content {
     /**
      * Workaround to use enum as discriminator.
      */
-
     public static class Values {
         public static final String BOOK_VALUE = "book";
         public static final String JOURNAL_VALUE = "journal";

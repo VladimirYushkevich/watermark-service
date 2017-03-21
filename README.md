@@ -1,6 +1,5 @@
-[![Build Status](https://travis-ci.org/VladimirYushkevich/watermark-service.svg?branch=master)](https://travis-ci.org/VladimirYushkevich/watermark-service)
+Watermark [![Build Status](https://travis-ci.org/VladimirYushkevich/watermark-service.svg?branch=master)](https://travis-ci.org/VladimirYushkevich/watermark-service) [![Code Coverage](https://img.shields.io/codecov/c/github/VladimirYushkevich/watermark-service/master.svg)](https://codecov.io/github/VladimirYushkevich/watermark-service?branch=master)
 
-Watermark
 =
 ### Description:
 

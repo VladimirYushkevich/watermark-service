@@ -4,7 +4,6 @@ import com.company.watermark.domain.Content;
 import com.company.watermark.domain.Publication;
 import com.company.watermark.domain.Watermark;
 import com.company.watermark.exception.NotFoundException;
-import com.company.watermark.exception.PublicationException;
 import com.company.watermark.exception.WatermarkException;
 import com.company.watermark.repository.BookRepository;
 import com.company.watermark.repository.JournalRepository;
@@ -160,7 +159,7 @@ public class PublicationServiceImpl implements PublicationService {
                 return journalRepository;
             default:
                 log.error("Content not resolved for {}", content);
-                throw new PublicationException(content);
+                throw new IllegalArgumentException();
         }
     }
 }

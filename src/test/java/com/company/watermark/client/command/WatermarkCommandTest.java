@@ -1,7 +1,6 @@
-package com.company.watermark.client.hystrix;
+package com.company.watermark.client.command;
 
 import com.company.watermark.client.WatermarkClient;
-import com.company.watermark.client.command.WatermarkCommand;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

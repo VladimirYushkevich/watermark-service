@@ -1,17 +1,13 @@
 package com.company.watermark;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
 public class ApplicationTest {
 
+    private Application application = new Application();
+
     @Test
-    public void contextLoads() {
+    public void testWithArgs() throws Exception {
+        application.main(new String[]{"myarg"});
     }
 }

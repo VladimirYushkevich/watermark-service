@@ -51,7 +51,6 @@ public class WatermarkController {
                 .map(WatermarkMapper::buildTicketDTO)
                 .subscribe(deferredResult::setResult);
 
-
         return deferredResult;
     }
 }

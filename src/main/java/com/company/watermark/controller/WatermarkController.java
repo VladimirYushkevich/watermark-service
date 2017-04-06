@@ -6,13 +6,12 @@ import com.company.watermark.service.WatermarkService;
 import com.company.watermark.utils.mapper.WatermarkMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import javax.inject.Inject;
 import java.util.UUID;
 
 /**
@@ -21,7 +20,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/watermark")
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@AllArgsConstructor
 @Slf4j
 @Api(description = "Async operations for watermarks")
 public class WatermarkController {

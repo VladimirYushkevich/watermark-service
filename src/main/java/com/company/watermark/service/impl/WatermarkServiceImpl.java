@@ -1,6 +1,7 @@
 package com.company.watermark.service.impl;
 
 import com.company.watermark.client.WatermarkClient;
+import com.company.watermark.client.WatermarkHystrixCommandProperties;
 import com.company.watermark.client.command.WatermarkCommand;
 import com.company.watermark.domain.Content;
 import com.company.watermark.domain.Publication;
@@ -10,19 +11,17 @@ import com.company.watermark.exception.WatermarkException;
 import com.company.watermark.repository.WatermarkRepository;
 import com.company.watermark.service.PublicationService;
 import com.company.watermark.service.WatermarkService;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import rx.Observable;
 
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
 @Component
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@AllArgsConstructor
 @Transactional
 @Slf4j
 public class WatermarkServiceImpl implements WatermarkService {
@@ -30,11 +29,7 @@ public class WatermarkServiceImpl implements WatermarkService {
     private final WatermarkRepository watermarkRepository;
     private final PublicationService publicationService;
     private final WatermarkClient watermarkClient;
-
-    @Value("${hystrix.command.WatermarkCommand.timeoutInMilliseconds}")
-    private int watermarkTimeOut;
-    @Value("${hystrix.command.watermark.groupKey}")
-    private String watermarkGroupKey;
+    private final WatermarkHystrixCommandProperties watermarkHystrixCommandProperties;
 
     @Override
     public Observable<UUID> watermarkDocument(Long publicationId, Content content) {
@@ -80,9 +75,9 @@ public class WatermarkServiceImpl implements WatermarkService {
         final Watermark createdWatermark = publicationService.setWatermark(publicationId, content);
 
         WatermarkCommand.builder()
-                .groupKey(watermarkGroupKey)
+                .groupKey(watermarkHystrixCommandProperties.getGroupKey())
                 .debugMessage("watermarkDocument")
-                .timeout(watermarkTimeOut)
+                .timeout(watermarkHystrixCommandProperties.getTimeoutInMilliseconds())
                 .watermarkProperties(createdWatermark.getPublication().getWatermarkProperties())
                 .watermarkClient(watermarkClient)
                 .build()

@@ -9,14 +9,13 @@ import com.company.watermark.repository.BookRepository;
 import com.company.watermark.repository.JournalRepository;
 import com.company.watermark.repository.PublicationRepository;
 import com.company.watermark.service.PublicationService;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import java.util.Optional;
 
 import static com.company.watermark.domain.Watermark.Status.*;
@@ -26,7 +25,7 @@ import static java.util.Objects.nonNull;
 import static org.springframework.beans.BeanUtils.copyProperties;
 
 @Component
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@AllArgsConstructor
 @Transactional
 @Slf4j
 public class PublicationServiceImpl implements PublicationService {

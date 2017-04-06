@@ -5,14 +5,12 @@ import com.company.watermark.domain.Journal;
 import com.company.watermark.domain.Watermark;
 import com.company.watermark.repository.BookRepository;
 import com.company.watermark.repository.JournalRepository;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-
-import javax.inject.Inject;
 
 import static com.company.watermark.RepositoryDataFactory.createJournal;
 import static com.company.watermark.domain.Book.Topic.*;
@@ -23,7 +21,7 @@ import static com.company.watermark.domain.Watermark.Status.NEW;
  */
 
 @Component
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@AllArgsConstructor
 @Slf4j
 @Profile("test")
 public class TestDataLoader implements ApplicationListener<ContextRefreshedEvent> {

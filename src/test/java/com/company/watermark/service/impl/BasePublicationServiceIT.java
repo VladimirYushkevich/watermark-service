@@ -22,7 +22,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@ComponentScan("com.company.watermark.service.impl")
+@ComponentScan({"com.company.watermark.service.impl", "com.company.watermark.client"})
 @DataJpaTest
 public abstract class BasePublicationServiceIT {
 
@@ -120,7 +120,7 @@ public abstract class BasePublicationServiceIT {
         fail("Should throw exception");
     }
 
-    protected void testWatermarkSetUp_fail_notAllowedToUpdatePending(Content content){
+    protected void testWatermarkSetUp_fail_notAllowedToUpdatePending(Content content) {
         //given
         Publication publication = buildPublication(content);
         publication.getWatermark().setStatus(PENDING.getName());

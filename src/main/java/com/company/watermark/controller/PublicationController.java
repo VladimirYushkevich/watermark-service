@@ -11,7 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,13 +19,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
-
 import static com.company.watermark.utils.mapper.PublicationMapper.*;
 
 @RestController
 @RequestMapping("/publication")
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@AllArgsConstructor
 @Slf4j
 @Api(description = "Sync CRUD operations for book and journals")
 public class PublicationController {

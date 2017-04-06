@@ -14,4 +14,5 @@
     </root>
 
     <logger name="com.company.watermark" level="DEBUG"/>
+    <logger name="org.springframework.transaction.interceptor" level="TRACE"/>
 </configuration>

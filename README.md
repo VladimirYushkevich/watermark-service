@@ -26,7 +26,7 @@ document can be retrieved with the ticket. The watermark of a book or a journal 
 setting the watermark property of the object. For a book the watermark includes the properties
 content, title, author and topic. The journal watermark includes the content, title and author.
 
-####Examples for watermarks:
+#### Examples for watermarks:
 ```
 {content:”book”, title:”The Dark Code”, author:”Bruce Wayne”, topic:”Science”}
 {content:”book”, title:”How to make money”, author:”Dr. Evil”, topic:”Business”}

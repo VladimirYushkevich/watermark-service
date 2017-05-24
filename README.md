@@ -42,7 +42,7 @@ c) Provide Unit-Tests to ensure the functionality of the service.
 ```
 ./gradlew clean build -i && java -jar build/libs/watermark-0.0.1-SNAPSHOT.jar
 ```
-Some tests are a bit time consuming (total time ~ 1min), to speed up lunch:
+Some tests are a bit time consuming (total time ~ 1min), to speed up launch:
 ```
 ./gradlew clean build -x test && java -jar build/libs/watermark-0.0.1-SNAPSHOT.jar
 ```
